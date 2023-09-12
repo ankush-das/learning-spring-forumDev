@@ -1,0 +1,499 @@
+
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+	<title>User Profile</title>
+
+	<style>
+		body {
+
+			font-family: Arial, sans-serif;
+
+			background: linear-gradient(to bottom, #b4d6e1, #8aadd7);
+
+
+
+			margin: 0;
+
+			padding: 0;
+
+			text-align: center;
+
+		}
+
+
+
+		h1 {
+
+			background-color: #333;
+
+			color: #fff;
+
+			padding: 10px;
+
+			width: 40%;
+
+			margin-left: 460px;
+
+			border-radius: 10px;
+
+		}
+
+
+
+		.user-profile-card {
+
+			max-width: 400px;
+
+			margin: 20px auto;
+
+			padding: 20px;
+
+			border: 1px solid #e1e1e1;
+
+			border-radius: 5px;
+
+			background-color: #fff;
+
+			background: linear-gradient(to bottom, #1066bc, #89a8cf);
+			/* Gradient background */
+
+
+
+
+
+
+
+		}
+
+
+
+		.user-details {
+
+			text-align: left;
+
+		}
+
+
+
+		.user-avatar {
+
+			width: 150px;
+
+			height: 150px;
+
+			border-radius: 50%;
+
+			overflow: hidden;
+
+			margin: 0 auto 10px;
+
+		}
+
+
+
+		.user-avatar img {
+
+			width: 100%;
+
+			height: 100%;
+
+			object-fit: cover;
+
+		}
+
+
+
+		h2 {
+
+			font-size: 18px;
+
+			margin-top: 20px;
+
+			text-align: center;
+
+			padding: 10px;
+
+			background-color: #333;
+
+			color: #fff;
+
+			width: 50%;
+
+			margin-left: 393px;
+
+		}
+
+
+
+		.edit-profile-button {
+
+			width: 20%;
+
+			margin-bottom: 10px;
+
+			background-color: #333;
+
+			color: #fff;
+
+			padding: 10px 20px;
+
+			border: none;
+
+			border-radius: 4px;
+
+			cursor: pointer;
+
+			display: block;
+
+			margin: 0px 40px 10px 130px;
+
+			text-decoration: none;
+
+			text-align: center;
+
+		}
+
+
+
+		.edit-profile-button:hover {
+
+			background-color: #555;
+
+		}
+
+
+
+
+
+		ul {
+
+			list-style: none;
+
+			padding: 0;
+
+		}
+		
+		.box{
+			padding: 10px;
+
+			border: 1px solid #e1e1e1;
+
+			border-radius: 5px;
+
+			margin-bottom: 10px;
+
+			background-color: #fff;
+
+			display: flex;
+
+			justify-content: space-between;
+		}
+
+
+
+		li {
+
+			padding: 10px;
+
+			border: 1px solid #e1e1e1;
+
+			border-radius: 5px;
+
+			margin-bottom: 10px;
+
+			background-color: #fff;
+
+			display: flex;
+
+			justify-content: space-between;
+
+		}
+
+
+
+		span {
+
+			font-size: 16px;
+
+			color: #333;
+
+			margin-right: 10px;
+
+		}
+
+
+
+		form {
+
+			display: inline-block;
+
+		}
+
+
+
+		/* input[type="submit"] {
+
+            background-color: #333;
+
+            color: #fff;
+
+            padding: 5px 10px;
+
+            border: none;
+
+            border-radius: 4px;
+
+            cursor: pointer;
+
+        } */
+
+
+
+		input[type="submit"]:hover {
+
+			background-color: #555;
+
+		}
+
+
+
+		.all-posts {
+
+			max-width: 600px;
+
+			margin: 20px auto;
+
+			padding: 20px;
+
+			border: 1px solid #e1e1e1;
+
+			border-radius: 5px;
+
+			background-color: #fff;
+
+			overflow-y: auto;
+			/* Enable vertical scroll for overflow */
+
+			max-height: 400px;
+			/* Set maximum height for the posts container */
+
+		}
+
+		.favorite-link {
+
+			text-decoration: none;
+
+			color: #ffffff;
+
+			cursor: pointer;
+
+		}
+        .muted-link {
+
+			text-decoration: none;
+
+			color: #ffffff;
+
+			cursor: pointer;
+
+		}
+
+
+
+		.muted-link:hover {
+
+			text-decoration: none;
+
+		}
+	</style>
+
+</head>
+
+<body>
+
+	<h1>User Profile</h1>
+
+
+
+	<div class="user-profile-card">
+
+		<div class="user-avatar">
+
+			<!-- Thymeleaf expression to display the user's profile picture -->
+
+			<!--            <img th:src="${user.profilePictureUrl}" alt="Profile Picture">-->
+
+		</div>
+
+		<!-- <h2>User Pro</h2> -->
+
+		<a class="edit-profile-button" href="/edit-profile">Edit Profile</a>
+
+
+
+		<li>
+
+			<span>ID:</span>
+
+			<span th:text="${id}"></span>
+
+		</li>
+
+		<li>
+
+			<span>Username:@</span>
+
+			<span th:text="${username}"></span>
+
+		</li>
+
+		<li>
+
+			<span>Date of Birth:</span>
+
+			<span th:text="${dateOfBirth}"></span>
+
+		</li>
+
+		<li>
+
+			<span>Bio:</span>
+
+			<span th:text="${bio}"></span>
+
+		</li>
+
+		</ul>
+
+	</div>
+
+
+
+	<h2>Users Posts:</h2>
+
+	<div class="all-posts">
+
+		<ul>
+
+			
+
+
+		<li th:each="post : ${posts}">
+			<div class="box"><span th:text="${post.author.name}"></span></div>
+			<div class="box"><span th:text="${post.content}"></span></div>
+		</li>
+	
+
+				<!-- Button to mark as favorite -->
+
+				<!-- <form th:action="@{/forum/user/markFavorite}" method="post">
+
+                    <input type="hidden" name="postId" th:value="${post.id}" >
+
+                    <input type="submit" value="make favorite">
+
+                </form> -->
+
+
+
+				<!-- Button to mark as muted -->
+
+				<!-- <form th:action="@{/forum/user/markMuted}" method="post">
+
+                    <input type="hidden" name="postId" th:value="${post.id}" >
+
+                    <input type="submit" value="mute">
+
+                </form> -->
+
+			</li>
+
+		</ul>
+
+	</div>
+
+
+
+	<h2><a class="favorite-link" th:href="@{/forum/user/markFavorite}">Favorite Authors</a></h2>
+
+	<div class="favorites">
+
+		<ul>
+
+			<!-- Loop through and display favorite authors -->
+
+			<li th:each="author : ${favoriteAuthors}">
+
+				<span th:text="${author.name}"></span>
+
+			</li>
+
+		</ul>
+		
+
+	</div>
+	
+	<h2><a class="muted-link" th:href="@{/forum/user/markMuted}">Muted Authors</a></h2>
+
+	<div class="muted">
+
+		<ul>
+
+			<!-- Loop through and display favorite posts -->
+
+			<li th:each="post : ${mutedAuthors}">
+
+				<span th:text="${post.title}"></span>
+
+			</li>
+
+		</ul>
+	<h2><a class="favorite-link" href="/favorite-posts">Favorite Posts</a></h2>
+
+	<div class="favorites">
+
+		<ul>
+
+			<!-- Loop through and display favorite posts -->
+
+			<li th:each="post : ${favoritePosts}">
+
+				<span th:text="${post.title}"></span>
+
+			</li>
+
+		</ul>
+
+	</div>
+
+
+
+	<h2><a class="muted-link" href="/muted-posts">Muted Posts</a></h2>
+
+	<div class="muted">
+
+		<ul>
+
+			<!-- Loop through and display favorite posts -->
+
+			<li th:each="post : ${mutedPosts}">
+
+				<span th:text="${post.title}"></span>
+
+			</li>
+
+		</ul>
+
+	</div>
+	
+
+	</div>
+	
+
+</body>
+
+</html>

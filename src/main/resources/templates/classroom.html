@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Students</title>
+  </head>
+  <body>
+    <div>
+      <form
+        action="#"
+        th:action="@{/classroom/add}"
+        method="post"
+        id="addStudentForm"
+      >
+        <input type="text" name="name" id="name" placeholder="enter name" />
+        <input type="text" name="score" id="score" placeholder="enter score" />
+        <!-- <div class="alert alert-warning" th:if="${#fields.hasErrors('score')}" th:errors="*{score}"></div> -->
+        <input type="submit" value="add" name="action" />
+      </form>
+      <div id="feedback"></div>
+      <h1>Students</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>rank</th>
+            <th>Name</th>
+            <th>score</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="student : ${students}">
+            <td th:text="${student.id}">Id</td>
+            <td th:text="${student.rank}">rank</td>
+            <td th:text="${student.name}">Name</td>
+            <td th:text="${student.score}">score</td>
+            <td class="actions">
+              <form
+                action="#"
+                th:action="@{'/classroom/update/' + ${student.id}}"
+                method="post"
+              >
+                <input type="text" name="name" th:value="${student.name}" />
+                <input type="text" name="score" th:value="${student.score}" />
+                <input type="submit" name="action" value="update" />
+              </form>
+              <form
+                action="#"
+                th:action="@{'/classroom/delete/' + ${student.id}}"
+                method="post"
+              >
+                <input type="submit" name="action" value="delete" />
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+      integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      $(document).ready(function () {
+        $("#addStudentForm").on("submit", function (e) {
+          e.preventDefault();
+          var form = $(this);
+          var name = $("#name").val();
+          var score = $("#score").val();
+
+          // Check for empty fields
+          if (!name || !score) {
+            $("#feedback").text("Please fill in both name and score.");
+            return;
+          }
+          var csrfToken = $("input[name='_csrf']").val();
+          $.ajax({
+            url: "/classroom/add", // Update with your server endpoint
+            data: {
+              name: name,
+              score: score,
+            },
+            headers: {
+              "X-CSRF-TOKEN": csrfToken,
+            },
+            type: "POST",
+            success: function (response) {
+              console.log(response);
+              if (response.success) {
+                // Clear the form fields
+                $("#name").val("");
+                $("#score").val("");
+                // Display a success message
+                $("#feedback").text("Student added successfully!");
+                // Add the new student to the table (assuming you have a function for this)
+                addStudentToTable(response.student);
+              } else {
+                $("#feedback").text("Error adding student.");
+              }
+            },
+            error: function (error) {
+              console.log(error);
+              $("#feedback").text("Error adding student.");
+            },
+          });
+        });
+
+        // Function to add a new student row to the table
+        function addStudentToTable(student) {
+          var newRow = $("<tr>");
+          newRow.append("<td>" + student.id + "</td>");
+          newRow.append("<td>" + student.rank + "</td>");
+          newRow.append("<td>" + student.name + "</td>");
+          newRow.append("<td>" + student.score + "</td>");
+          newRow.append(
+            '<td class="actions">' +
+              '<form action="#" method="post">' +
+              '<input type="text" name="name" value="' +
+              student.name +
+              '" />' +
+              '<input type="text" name="score" value="' +
+              student.score +
+              '" />' +
+              '<input type="submit" name="action" value="update" />' +
+              "</form>" +
+              '<form action="#" method="post">' +
+              '<input type="submit" name="action" value="delete" />' +
+              "</form>" +
+              "</td>"
+          );
+
+          $("tbody").append(newRow);
+        }
+      });
+    </script>
+  </body>
+</html>
